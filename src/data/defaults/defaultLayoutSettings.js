@@ -11,4 +11,6 @@ export default () => ({
   findUseRegexp: false,
   sideBarPanel: 'menu',
   welcomeTourFinished: false,
+  showEditErorPopUp: false,
+  editErrorPopUpText: '',
 });

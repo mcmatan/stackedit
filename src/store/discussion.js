@@ -1,6 +1,7 @@
 import utils from '../services/utils';
 import googleHelper from '../services/providers/helpers/googleHelper';
 import syncSvc from '../services/syncSvc';
+import store from '.';
 
 const idShifter = offset => (state, getters) => {
   const ids = Object.keys(getters.currentFileDiscussions);
@@ -132,6 +133,10 @@ export default {
       }
     },
     async createNewDiscussion({ commit, dispatch, rootGetters }, selection) {
+      store.dispatch('data/patchLayoutSettings', {
+        showEditErorPopUp: true,
+        editErrorPopUpText: selection,
+      });
       const loginToken = rootGetters['workspace/loginToken'];
       if (!loginToken) {
         try {
