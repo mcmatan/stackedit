@@ -1,24 +1,32 @@
 <template>
-  <a class="new-discussion-button" href="javascript:void(0)" v-if="coordinates" :style="{top: coordinates.top + 'px'}" v-title="'Start a discussion'" @mousedown.stop.prevent @click="createNewDiscussion(selection)">
-    <icon-message></icon-message>
+
+<div>
+        <template v-for="(item) in indexesCoordinates">
+          <a :key="item" class="new-discussion-button" href="javascript:void(0)" v-if="item" :style="{top: item + 'px'}" v-title="'Start a discussion'" @mousedown.stop.prevent @click="createNewDiscussion(selection)">
+    <icon-alert></icon-alert>
   </a>
+        </template>
+    </div>
 </template>
 
 <script>
 import { mapActions } from 'vuex';
 import editorSvc from '../../services/editorSvc';
 import store from '../../store';
+import ErrorIndexSvc from '../../services/ErrorIndexesSvc.ts';
 
 export default {
   data: () => ({
     selection: null,
     coordinates: null,
+    indexesCoordinates: null,
   }),
   methods: {
     ...mapActions('discussion', [
       'createNewDiscussion',
     ]),
     checkSelection() {
+      console.log('checkSelection');
       clearTimeout(this.timeout);
       this.timeout = setTimeout(() => {
         let offset;
@@ -36,6 +44,15 @@ export default {
             }
           }
         }
+        const nextIndexesCoordinates = [];
+        for (let i = 0; i < ErrorIndexSvc.getInstance().errorsIndexes.length; i += 1) {
+          const errorIndex = ErrorIndexSvc.getInstance().errorsIndexes[i];
+          const current = editorSvc.clEditor.selectionMgr.getCoordinates(errorIndex).top;
+          if (!nextIndexesCoordinates.includes(current)) {
+            nextIndexesCoordinates[i] = current;
+          }
+        }
+        this.indexesCoordinates = nextIndexesCoordinates;
         this.coordinates = offset
           ? editorSvc.clEditor.selectionMgr.getCoordinates(offset)
           : null;

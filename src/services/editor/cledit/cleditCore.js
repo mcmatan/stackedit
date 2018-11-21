@@ -2,6 +2,8 @@ import DiffMatchPatch from 'diff-match-patch';
 import TurndownService from 'turndown/lib/turndown.browser.umd';
 import htmlSanitizer from '../../../libs/htmlSanitizer';
 import store from '../../../store';
+import ErrorIndexSvc from '../../ErrorIndexesSvc.ts';
+
 
 function cledit(contentElt, scrollEltOpt, isMarkdown = false) {
   const scrollElt = scrollEltOpt || contentElt;
@@ -121,6 +123,20 @@ function cledit(contentElt, scrollEltOpt, isMarkdown = false) {
     delete editor.$markers[marker.id];
   }
 
+  const checkForErrors = () => {
+    const indexes = [];
+    let i = 0;
+    const charicater = '-';
+    for (i = 0; i < lastTextContent.length; i += 1) {
+      if (lastTextContent[i] === charicater) {
+        indexes.push(i);
+      }
+    }
+
+    ErrorIndexSvc.getInstance().errorsIndexes = indexes;
+  };
+
+
   const triggerSpellCheck = debounce(() => {
     // Hack for Chrome to trigger the spell checker
     const selection = window.getSelection();
@@ -189,6 +205,8 @@ function cledit(contentElt, scrollEltOpt, isMarkdown = false) {
     }
     ignoreUndo = false;
     lastTextContent = newTextContent;
+
+    checkForErrors();
     triggerSpellCheck();
   }
 

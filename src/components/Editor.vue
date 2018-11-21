@@ -33,6 +33,7 @@ export default {
   mounted() {
     const editorElt = this.$el.querySelector('.editor__inner');
     const onDiscussionEvt = cb => (evt) => {
+      console.log(evt);
       let elt = evt.target;
       while (elt && elt !== editorElt) {
         if (elt.discussionId) {

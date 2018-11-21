@@ -2,7 +2,7 @@
   <div class="tour" @keydown.esc.stop="skip">
     <div class="tour-step" :class="'tour-step--' + step" :style="stepStyle">
       <div class="tour-step__inner" v-if="step === 'welcome'">
-        <h2>Welcome back!</h2>
+        <h2>Welcome black!</h2>
         <p>The new <b>StackEdit 5</b> is here!</p>
         <p>Please click <b>Next</b> to take a quick tour.</p>
         <div class="tour-step__button-bar">
